@@ -1,0 +1,19 @@
+CCII Current Conveyor — BROKEN: X and Z port labels swapped
+VCC 10 0 DC 5
+VEE 20 0 DC -5
+VIN 1 0 DC 0 AC 1
+* CCII instance — X and Z deliberately swapped
+* Correct: X_U1 Y X Z CCII
+* Broken:  X_U1 Y Z X CCII
+X_U1 Y Z X CCII
+
+.SUBCKT CCII Y X Z
+M1 Y Y VCC VCC PMOS W=10u L=1u
+M2 X Y VCC VCC PMOS W=10u L=1u
+M3 X X VEE VEE NMOS W=10u L=1u
+M4 Z X VEE VEE NMOS W=10u L=1u
+.ENDS CCII
+
+.AC DEC 10 1Hz 1MHz
+.PROBE
+.END

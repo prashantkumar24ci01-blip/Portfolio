@@ -1,0 +1,6 @@
+* Missing title test netlist
+* First line is a component, not a title
+R1 vin out 1k
+
+.ac dec 10 1k 1Meg
+.end

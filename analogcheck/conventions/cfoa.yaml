@@ -1,0 +1,52 @@
+subckt_type: "CFOA"
+description: "Four-terminal CFOA: Y (high-Z voltage sense), X (low-Z current io), Z (compensation node, high-Z), O (voltage output buffer)"
+
+ports:
+  Y:
+    role: "high_z_input"
+    signal: "voltage"
+    behavior: "sets V_X = V_Y"
+  X:
+    role: "low_z_ioport"
+    signal: "current"
+    behavior: "I_Z = I_X"
+  Z:
+    role: "comp_node"
+    signal: "voltage"
+    behavior: "V_O = V_Z"
+  O:
+    role: "output"
+    signal: "voltage"
+    behavior: "low-Z buffer of V_Z"
+
+signal_flow:
+  - from: "Y"
+    to: "X"
+    via: "voltage_follower"
+  - from: "X"
+    to: "Z"
+    via: "current_conveyor"
+  - from: "Z"
+    to: "O"
+    via: "voltage_buffer"
+
+port_swaps_to_flag:
+  - [Y, X]
+  - [Y, Z]
+  - [X, Z]
+  - [Z, O]
+
+admittance_map:
+  expected:
+    Y:
+      connected_to: ["input_source"]
+      admittance_type: "input"
+    X:
+      connected_to: ["feedback_network"]
+      admittance_type: "feedback"
+    Z:
+      connected_to: ["load_capacitor", "feedback_resistor"]
+      admittance_type: "compensation"
+    O:
+      connected_to: ["next_stage"]
+      admittance_type: "output"

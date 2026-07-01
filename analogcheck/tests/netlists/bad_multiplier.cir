@@ -1,0 +1,8 @@
+* Bad multiplier test (M vs MEG)
+* R1 uses 1M which SPICE reads as 1 milli-ohm, not 1 mega-ohm
+Vin vin 0 AC 1
+R1 vin out 1M
+C1 out 0 10p
+
+.ac dec 10 1k 1Meg
+.end

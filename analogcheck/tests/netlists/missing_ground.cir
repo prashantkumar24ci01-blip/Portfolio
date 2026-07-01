@@ -1,0 +1,8 @@
+* Missing ground test netlist
+* No node 0 or GND anywhere
+Vin vin vss AC 1
+R1 vin out 1k
+C1 out vss 10p
+
+.ac dec 10 1k 1Meg
+.end

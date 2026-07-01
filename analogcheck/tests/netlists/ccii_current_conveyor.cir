@@ -1,0 +1,22 @@
+CCII Current Conveyor — correct port labeling
+* Positive-type second-generation current conveyor
+VCC 10 0 DC 5
+VEE 20 0 DC -5
+VIN 1 0 DC 0 AC 1
+* CCII: Y high-Z input, X low-Z output, Z current output
+X_U1 Y X Z CCII
+
+.SUBCKT CCII Y X Z
+* CCII+: V_X = V_Y, I_Z = I_X
+* Input stage: differential pair
+M1 Y Y VCC VCC PMOS W=10u L=1u
+M2 X Y VCC VCC PMOS W=10u L=1u
+* Current mirror to Z
+* X current reflected to Z via current mirror
+M3 X X VEE VEE NMOS W=10u L=1u
+M4 Z X VEE VEE NMOS W=10u L=1u
+.ENDS CCII
+
+.AC DEC 10 1Hz 1MHz
+.PROBE
+.END

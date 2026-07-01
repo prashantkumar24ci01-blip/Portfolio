@@ -1,65 +1,85 @@
-# AnalogCheck — RAG-Enhanced SPICE Netlist Debugger
+# AnalogCheck ⚡ SPICE Netlist Semantic Error Checker
 
-**Technologies:** Python, ChromaDB, sentence-transformers, LLM (OpenRouter), ngspice, pytest
-**Timeline:** May-June 2026
-**Source:** `Z:\hermes\analogcheck\`
+[![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com)
 
-## What it does
+CLI tool that catches **semantic errors** in SPICE netlists — bugs that simulators pass silently but produce wrong physical results (port-label swaps, missing ground, M vs MEG confusion, floating nodes).
 
-CLI tool that catches semantic errors in SPICE netlists — bugs that simulators pass silently but produce wrong physical results (port-label swaps, missing ground, M vs MEG confusion).
+**Deterministic parsing + ngspice subprocess + optional RAG-enhanced LLM reasoning.**
 
-Three-tier detection:
-1. **Deterministic parse-time checks** — floating nodes, no ground, duplicate names, M vs MEG
-2. **ngspice subprocess + .raw reader** — simulation-level anomaly detection
-3. **LLM reasoning with RAG** — retrieves relevant IC error patterns + PSpice docs from ChromaDB
+## Features
 
-## Architecture
+✔ **5 deterministic checks** — floating nodes, missing ground, duplicate names, missing title, M vs MEG multiplier  
+✔ **ngspice integration** — subprocess runner with .raw output reader  
+✔ **RAG-enhanced LLM** — retrieves 20+ IC error patterns (LM741, LM358, AD844 pinouts) + PSpice convergence docs from ChromaDB  
+✔ **Two output formats** — JSON (canonical) and Markdown (human-readable tables)  
+✔ **Provider-agnostic LLM** — works with OpenAI, OpenRouter, Anthropic, any OpenAI-compatible API  
 
-```
-netlist.cir → token-split parser → Device/Subckt/Netlist data structures
-           → deterministic checks (floating node, ground, M vs MEG, etc.)
-           → ngspice subprocess → .raw reader
-           → RAG query (ChromaDB: 35 chunks of IC errors + PSpice refs)
-           → LLM diagnosis with RAG context
-           → JSON / Markdown report
-```
-
-## Key files in this repo
-
-| File | Purpose |
-|------|---------|
-| `analogcheck/checker.py` | Pipeline orchestrator + 5 health checks |
-| `analogcheck/rag.py` | ChromaDB + sentence-transformers RAG pipeline |
-| `analogcheck/parser.py` | Token-split SPICE netlist parser |
-| `analogcheck/knowledge/ic_errors.yaml` | 20 IC error patterns (LM741, LM358, etc.) |
-| `analogcheck/knowledge/pspice_reference.txt` | 20 common PSpice errors with fixes |
-| `tests/netlists/` | Test netlists: correct, broken, missing_ground, bad_multiplier |
-| `chroma_db/` | Persistent vector store (35 chunks) |
-
-## Design decisions
-
-| Decision | Why |
-|----------|-----|
-| Token-split parser, not regex | Regex backtracking fails on X devices with complex params |
-| Subprocess ngspice, not PySpice | PySpice DLLs fragile on Windows |
-| sentence-transformers (local) | Zero API cost, ~35ms retrieval, runs on CPU |
-| ChromaDB (local) | Zero infra, persists to disk, no cloud |
-| RAG context → LLM prompt | Grounds diagnosis in verified docs, not model guesswork |
-
-## Running
+## Quick Start
 
 ```bash
 pip install -e .
-# Deterministic only
+
+# Deterministic checks only
 python -m analogcheck tests/netlists/cfoa_inverting_amp.cir --no-sim --format md
 
-# With LLM
+# With simulation
+python -m analogcheck tests/netlists/cfoa_inverting_amp.cir --format md
+
+# With LLM + RAG
 export ANALOGCHECK_LLM_ENDPOINT="https://openrouter.ai/api/v1/chat/completions"
 export ANALOGCHECK_LLM_API_KEY="sk-..."
 export ANALOGCHECK_LLM_MODEL="deepseek/deepseek-v4-flash"
 python -m analogcheck netlist.cir --llm on --rag
 ```
 
-## Resume bullet
+## Example
 
-> *"Built RAG-enhanced SPICE netlist debugger indexing 20+ common IC error patterns (LM741, LM358, LM317 pinout mismatches) and PSpice convergence documentation into ChromaDB with sentence-transformer embeddings. RAG context retrieved at check-time grounds LLM diagnosis in verified reference material. 35 chunks indexed, ~35ms retrieval latency."*
+```bash
+$ python -m analogcheck tests/netlists/missing_ground.cir --no-sim --format md
+```
+
+| Severity | Check Type | Device | Rule | Reason |
+|----------|-----------|--------|------|--------|
+| ❌ fail | topology_mismatch | netlist | missing_ground | No ground node (0/GND) found |
+| ⚠️ warn | topology_mismatch | netlist | no_subckt_instances | No subcircuit instances |
+
+## Architecture
+
+```
+netlist.cir → token-split parser → Device/Subckt data structures
+           → deterministic checks (5 rules)
+           → ngspice subprocess → .raw reader
+           → RAG query (ChromaDB: 35 chunks)
+           → LLM diagnosis with RAG context → JSON / Markdown
+```
+
+## Project Structure
+
+```
+analogcheck/
+├── analogcheck/
+│   ├── checker.py           # Pipeline orchestrator + health checks
+│   ├── parser.py            # Token-split SPICE parser
+│   ├── rag.py               # ChromaDB + sentence-transformers RAG
+│   ├── llm_reasoning.py     # Provider-agnostic LLM client
+│   ├── runner.py            # ngspice subprocess manager
+│   ├── conventions.py       # YAML convention loader
+│   ├── knowledge/
+│   │   ├── ic_errors.yaml   # 20 IC error signatures
+│   │   └── pspice_reference.txt  # 20 common PSpice errors
+│   └── cli.py               # Argument parser
+├── tests/
+│   ├── netlists/            # Test .cir files (correct + broken)
+│   └── test_parser.py       # Pytest suite
+└── chroma_db/               # Vector store (built on first --rag run)
+```
+
+## Tested IC error patterns
+
+LM741, LM358, LM324, NE5532, TL081, AD844, 2N2222, 2N3904, LM317, LM337, 7805, 7905, LM393, LM317, BS170, 1N4148, and more.
+
+## License
+
+MIT

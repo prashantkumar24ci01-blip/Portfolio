@@ -1,0 +1,21 @@
+CFOA Inverting Amplifier — correct port labeling
+VCC 10 0 DC 5
+VEE 20 0 DC -5
+VIN 1 0 DC 0 AC 1
+R1 1 Y 1k
+R2 O Y 10k
+RL O 0 10k
+X_U1 Y X Z O CFOA
+
+.SUBCKT CFOA Y X Z O
+* Behavioral CFOA: V_X = V_Y, I_Z = I_X, V_O = V_Z
+VX X 0 DC 0            ; sense current into X
+EX X 0 Y 0 1.0         ; V(X,0) = V(Y,0) → V_X = V_Y
+FZ Z 0 VX 1.0          ; I(Z,0) = I(VX) → I_Z = I_X
+EO O 0 Z 0 1.0         ; V(O,0) = V(Z,0) → V_O = V_Z
+RZ Z 0 1e6             ; high-Z node
+.ENDS CFOA
+
+.AC DEC 10 1Hz 1MHz
+.PROBE
+.END
