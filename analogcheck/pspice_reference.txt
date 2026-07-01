@@ -1,0 +1,132 @@
+# Common SPICE / PSpice netlist errors and troubleshooting
+# Extracted from PSpice documentation, ngspice forums, KiCad forums, and StackExchange
+
+## 1. Missing ground node
+- Error: "singular matrix" / "no DC path to ground" / floating node error
+- Cause: No node 0 or GND in the netlist. SPICE needs a global reference.
+- Fix: Add node 0 (ground) to at least one component.
+- Example: R1 1 0 1k  (node 0 as ground)
+
+## 2. Floating nodes
+- Error: "Less than 2 connections at node X" / "singular matrix: check node X"
+- Cause: A node is connected to only one component (dangling wire).
+- Fix: Check schematic for unconnected wires. Add R=1G to ground if intentional.
+- Options: .options rshunt=1T (auto-adds 1T-ohm to every node)
+
+## 3. No DC path to ground
+- Error: "Node X has no DC path to ground" / singular matrix
+- Cause: Capacitor in series, transformer-isolated node, current source without parallel resistor.
+- Fix: Add high-value resistor (1G ohm) from floating node to ground.
+- Example: C1 in out 10u  →  R1 out 0 1G
+
+## 4. Inductor / voltage source loops
+- Error: "singular matrix" / "Source/inductor loop"
+- Cause: Two voltage sources in parallel, inductor loop without resistance.
+- Fix: Add small series resistor (1m ohm). Use .options rshunt or add R=1m in series.
+- Example: L1 1 2 1u  →  add R1 2 3 1m before L1
+
+## 5. M vs MEG multiplier confusion
+- Error: No error (simulates with wrong values!)
+- Cause: 1M = 1 milli-ohm in SPICE (1e-3), not 1 mega-ohm (1e6).
+- Fix: Use 1MEG or 1e6 for megaohms. Use 1M only for milliohms.
+- Example: R1 1 0 1MEG  (correct: 1e6 ohm). R1 1 0 1M  (wrong: 0.001 ohm)
+
+## 6. Missing title line
+- Error: "serious error: improper node connections" (misleading message)
+- Cause: First line of netlist is a component, not a title or comment.
+- Fix: Add * or a title line before the first component.
+- Example: * My circuit  (first line)
+
+## 7. Missing .end statement
+- Error: "missing .end card" (warning, simulation still works)
+- Cause: File doesn't end with .end on its own line.
+- Fix: Add .end as the last line.
+
+## 8. Missing subcircuit / model definition
+- Error: "can't find model" / "Unable to find definition of model"
+- Cause: X device (subcircuit) referenced without corresponding .subckt definition.
+- Fix: Include the model library with .INC or .LIB. Ensure subcircuit name matches.
+- Example: .INC "opamp_lib.lib"  then  X1 1 2 3 LM741
+
+## 9. Wrong subcircuit pin order
+- Error: No error (simulates with wrong connections!)
+- Cause: X device node order doesn't match .subckt port order.
+- Fix: Verify port order in .subckt definition. Common mismatches:
+  - LM741: offset null(-), IN+, IN-, V-, offset null(+), OUTPUT, V+
+  - LM358: OUT, IN-, IN+, V-, V+  (per amplifier section)
+  - 2N2222: C, B, E  (but some libraries use E, B, C)
+
+## 10. Timestep too small (transient convergence)
+- Error: "Timestep too small" / "internal timestep too small"
+- Cause: Numerical instability, floating nodes, unrealistic model params, discontinuous sources.
+- Fix:
+  - Check for floating nodes (add R=1G to ground)
+  - Reduce RELTOL to 0.01 (faster) or increase ITL1 to 400
+  - Add realistic parasitics (CJO=3pF for diodes, CGS=5pF for MOSFETs)
+  - Use .options method=gear
+  - Add rshunt=1G option
+
+## 11. Missing DC source for supply pins
+- Error: "Node X is floating" / op-amp output stuck
+- Cause: IC supply pins (V+, V-) not connected to DC voltage sources.
+- Fix: Add V+ and V- voltage sources.
+- Example: VCC VCC 0 DC 15  ; VEE VEE 0 DC -15
+
+## 12. Wrong pin count in subcircuit call
+- Error: "Too few parameters for subcircuit type X"
+- Cause: Number of nodes in X line doesn't match .subckt definition.
+- Fix: Count pin order in .subckt and match in X instance. Fill unused pins with 0.
+
+## 13. Semiconductor model parameter issues
+- Error: "Model parameter X is out of range" / convergence failure
+- Cause: Unrealistic model parameters (e.g., diode N=1e-6, BF too high).
+- Fix: Use manufacturer-recommended model parameters.
+- Common: Diode N should be 1-2, not extreme values.
+
+## 14. ABM (Analog Behavioral Model) expression errors
+- Error: "no such function 'if'" / "unknown parameter" / "malformed B line"
+- Cause: Using PSpice-specific syntax in ngspice, or vice versa.
+- Fix:
+  - PSpice: IF(cond, t, f)  vs  ngspice: if(then, else, cond)
+  - PSpice: VALUE={expr}  vs  ngspice:  Bsource syntax
+  - Set compatibility flag: .options ngbehavior=ps (ngspice) for PSpice models
+
+## 15. Voltage source naming collision
+- Error: Singular matrix on DC
+- Cause: Two voltage sources with same name (e.g., two V1).
+- Fix: Use unique names: V1, V2, VCC, VDD, VEE, VSS, VIN, etc.
+
+## 16. Zero-value resistors / inductors
+- Error: Singular matrix
+- Cause: R=0 (ngspice/PSpice can't handle ideal zero resistance in some analyses).
+- Fix: Use R=1u (1 micro-ohm) instead of 0. Or use voltage source as zero-ohm path.
+
+## 17. Missing PCB footprint for netlisting (OrCAD/PSpice)
+- Error: "Property 'PCB Footprint' missing from instance"
+- Cause: OrCAD Capture requires footprint property even for simulation-only parts.
+- Fix: Set PCB Footprint property or ignore (does not affect simulation).
+
+## 18. Node naming issues
+- Error: "Node names are case-insensitive" confusion
+- Cause: 'vcc' and 'VCC' are the same node in SPICE.
+- Fix: Use consistent naming. Avoid node names starting with digits (e.g., '123').
+
+## 19. IC pinout mismatches (most common)
+- Error: Simulates but gives wrong output or no output
+- Common ICs and their correct pinouts:
+  - LM741 (op-amp): 1=Offset Null, 2=IN-, 3=IN+, 4=V-, 5=Offset Null, 6=OUT, 7=V+
+  - LM358 (dual op-amp) section A: 1=OUT, 2=IN-, 3=IN+, 4=V-, 8=V+
+  - LM324 (quad op-amp) section A: 1=OUT, 2=IN-, 3=IN+, 4=V+, 11=V-
+  - NE5532 (dual op-amp): 1=OUT, 2=IN-, 3=IN+, 4=V-, 8=V+
+  - TL081: 1=Offset Null, 2=IN-, 3=IN+, 4=V-, 5=Offset Null, 6=OUT, 7=V+, 8=NC
+  - 2N2222 (NPN BJT): C=Collector, B=Base, E=Emitter (but PSpice library may use E,B,C for Q-devices)
+  - 2N3904: same as 2N2222
+  - LM317: 1=ADJ, 2=VOUT, 3=VIN
+  - LM337: 1=ADJ, 2=VIN, 3=VOUT
+  - 7805: 1=IN, 2=GND, 3=OUT
+  - 7905: 1=GND, 2=IN, 3=OUT
+
+## 20. Supply bypass capacitors missing
+- Error: High-frequency oscillation in transient simulation
+- Cause: No bypass caps on IC supply pins.
+- Fix: Add 0.1uF + 10uF from each supply pin to ground.
