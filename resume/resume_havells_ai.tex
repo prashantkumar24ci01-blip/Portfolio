@@ -1,0 +1,94 @@
+\documentclass[9pt,a4paper]{extarticle}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[top=0.4in, bottom=0.35in, left=0.5in, right=0.5in]{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{xcolor}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\renewcommand{\arraystretch}{1.15}
+
+% Section titles as per guide
+\titleformat{\section}{\small\bfseries\uppercase}{}{0em}{}[\vspace{-2pt}\rule{\textwidth}{0.6pt}\vspace{-4pt}]
+\titlespacing*{\section}{0pt}{10pt}{5pt}
+
+% Compact list spacing
+\setlist[itemize]{leftmargin=12pt, label={--}, nosep, before=\vspace{2pt}, after=\vspace{2pt}}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries PRASHANT KUMAR}\\[3pt]
+{\footnotesize +91 8477993577 \quad\textbar\quad \href{mailto:prashantkumar_24ci01@dtu.ac.in}{prashantkumar\_24ci01@dtu.ac.in} \quad\textbar\quad \href{https://www.linkedin.com/in/prashant-kumar-3551b6214} \quad	extbar\quad \href{https://github.com/prashantkumar24ci01-blip}{github.com/prashantkumar24ci01-blip}{linkedin.com/in/prashant-kumar-3551b6214} \quad	extbar\quad \href{https://github.com/prashantkumar24ci01-blip}{github.com/prashantkumar24ci01-blip}}\\[3pt]
+{\footnotesize M.Tech (Control \& Instrumentation) --- Delhi Technological University \quad\textbar\quad GATE 2024 Qualified (EE)}\\[1pt]
+{\footnotesize\color{gray}AI Catalyst Intern --- Havells CRI}
+\end{center}
+\vspace{2pt}
+
+\section{Education}
+
+\begin{tabular}{>{\raggedright\arraybackslash}p{3cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{6.8cm}>{\raggedright\arraybackslash}p{1.5cm}}
+\textbf{Degree} & \textbf{Year} & \textbf{Institution} & \textbf{CGPA/\%} \\
+M.Tech (C\&I) & 2024--26 & Delhi Technological University & 74.5\% \\
+B.Tech (EE) & 2017--21 & MJP Rohilkhand University, Bareilly & 69.2\% \\
+\end{tabular}
+
+\section{Technical Skills}
+
+\begin{tabular}{>{\raggedright\arraybackslash}p{2.8cm}p{\dimexpr\textwidth-2.8cm-4\tabcolsep\relax}}
+\textbf{AI \& ML Stack} & RAG Pipelines, ChromaDB (Vector DB), Sentence Transformers, LLM Orchestration, NLP (Embeddings, Semantic Search), OpenRouter API, Model Evaluation \\
+\textbf{Programming} & Python (NumPy, Pandas, Matplotlib, HuggingFace), MATLAB, Shell/Bash, Git \\
+\textbf{Engineering Tools} & SPICE Simulation (ngspice, PSpice), Cadence Virtuoso, OrCAD, MATLAB/Simulink, Testbench Automation \\
+\textbf{Core Competencies} & Workflow Analysis \& Automation, Engineering Productivity, Design-of-Experiments, Signal Processing, Control Systems, Circuit Analysis \\
+\textbf{Platforms} & Linux (Redhat, Debian, NixOS), Windows, WSL \\
+\end{tabular}
+
+\section{Projects}
+
+\noindent\textbf{AnalogCheck --- AI-Powered SPICE Error Checker with RAG Pipeline} \hfill\textbf{Capstone Project}\\
+\emph{Python, ChromaDB, Sentence Transformers, OpenRouter LLM, ngspice}
+\begin{itemize}
+  \item Built CLI tool that semantically checks SPICE netlists for common IC design errors, combining 5 deterministic health checks with an AI reasoning layer --- directly analogous to engineering copilot deployment.
+  \item Implemented RAG pipeline: 20 annotated IC error patterns + PSpice reference documents embedded via \texttt{all-MiniLM-L6-v2} into ChromaDB vector store.
+  \item Integrated LLM reasoning (OpenRouter API) for error explanation and fix suggestion generation --- demonstrates LLM orchestration, prompt engineering, and AI tool calling.
+  \item Automated ngspice subprocess validation: parses simulation output, detects DC convergence failures, floating nodes, and missing ground --- AI-driven engineering workflow automation.
+  \item Generated structured JSON/Markdown reports; designed for CI/CD integration into design verification flows.
+\end{itemize}
+\vspace{6pt}
+
+\noindent\textbf{Engineering Workflow Automation: Bias-Sweep Testbench Generator}\\
+\emph{Python, ngspice, MATLAB}
+\begin{itemize}
+  \item Developed automated AC analysis testbench generator that sweeps 4 transistor bias conditions and extracts gain, phase margin, and $-3$\ dB bandwidth --- replaced manual per-condition testbench editing.
+  \item Demonstrated 5$\times$ reduction in simulation setup time; generated comparative performance reports programmatically.
+\end{itemize}
+\vspace{6pt}
+
+\noindent\textbf{M.Tech Thesis: Transistor-Level Analog Filter Verification}\\
+\emph{ngspice, Python, MATLAB, 0.18\ $\mu$m CMOS BSIM3v3}
+\begin{itemize}
+  \item Verified single-OTRA biquad filter at three abstraction tiers (symbolic, behavioral, transistor-level) --- systematic multi-level validation methodology transferable to AI model evaluation frameworks.
+  \item Identified and resolved high-pass passband droop via systematic DOE bias sweep across 4 operating points --- data-driven root-cause analysis.
+\end{itemize}
+
+\section{Additional Experience}
+
+\noindent\textbf{Teaching Assistant} --- Dept. of Electrical Engineering, DTU \hfill\textbf{Aug 2024 -- Present}
+\begin{itemize}
+  \item Conducted VLSI and digital logic labs for 30+ students; developed automated testbenches for functional verification.
+\end{itemize}
+
+\section{Achievements}
+\begin{itemize}
+  \item GATE 2024 Qualified (Electrical Engineering) --- top 15\% nationally.
+  \item Published IEEE Conference Paper: ``Application \& Performance Comparison of Electrical Motors in HEVs.''
+  \item Built and deployed 2 AI/ML tools (AnalogCheck RAG pipeline + automated testbench generator) demonstrating end-to-end AI project execution --- from problem identification to production-ready output.
+\end{itemize}
+
+\end{document}

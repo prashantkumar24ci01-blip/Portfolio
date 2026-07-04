@@ -1,0 +1,138 @@
+%-------------------------
+% Resume in Latex
+% Jake's Resume style adapted for VLSI/Analog fresher profile
+%------------------------
+
+\documentclass[letterpaper,10pt]{article}
+
+\usepackage{latexsym}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.6in}
+\addtolength{\textwidth}{1.2in}
+\addtolength{\topmargin}{-0.8in}
+\addtolength{\textheight}{1.5in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{\vspace{-8pt}\scshape\raggedright\large}{}{0em}{}[\color{black}\titlerule \vspace{-11pt}]
+\pdfgentounicode=1
+
+\newcommand{\resumeItem}[1]{\item\footnotesize{{#1 \vspace{-4pt}}}}
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\footnotesize#3} & \textit{\footnotesize #4} \\
+    \end{tabular*}\vspace{-4pt}
+}
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \footnotesize#1 & #2 \\
+    \end{tabular*}\vspace{-4pt}
+}
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.13in, label={}, itemsep=0pt]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.17in, itemsep=2pt]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-4pt}}
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Prashant Kumar} \\ \vspace{1pt}
+    \small +91 8477993577 $|$ \href{mailto:pkumar32.pk@gmail.com}{\underline{pkumar32.pk@gmail.com}} $|$
+    \href{https://www.linkedin.com/in/prashant-kumar-3551b6214}{\underline{linkedin.com/in/prashant-kumar-3551b6214}} $|$ Delhi NCR / Noida
+\end{center}\vspace{-12pt}
+
+%-----------SUMMARY-----------
+\section{Summary}
+\footnotesize{M.Tech Control \& Instrumentation student targeting Analog/Mixed-Signal and VLSI fresher roles, with Cadence Virtuoso schematic/layout exposure, DRC/LVS, PEX, post-layout simulation, MOSFET modeling, active filters, and transistor-level CMOS analog design.}\vspace{-8pt}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading{Delhi Technological University}{New Delhi}{M.Tech, Control \& Instrumentation; 74.5\%}{2024 -- 2026}
+    \resumeSubheading{MJP Rohilkhand University}{Bareilly}{B.Tech, Electrical Engineering; 69.2\%}{2017 -- 2021}
+  \resumeSubHeadingListEnd
+
+%-----------SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.13in, label={}, itemsep=0pt]
+    \footnotesize{\item{
+     \textbf{Analog/MS IC:} MOSFET operation, small-signal analysis, current mirrors, differential pairs, OTA/op-amp fundamentals, active filters, gm/ID, EKV concepts \\
+     \textbf{EDA/Simulation:} Cadence Virtuoso Schematic/Layout, Spectre/Assura flow exposure, OrCAD PSpice, MATLAB/Simulink \\
+     \textbf{Verification/Layout:} DRC, LVS, PEX, post-layout simulation, PVT/Monte Carlo analysis, transistor sizing, guard rings, matching-aware layout \\
+     \textbf{Programming:} Basic Python, TCL, Verilog, C++; Linux/Red Hat workflow; \textbf{Self-Study:} PLL basics, ADC/DAC fundamentals, high-speed transceiver concepts
+    }}
+ \end{itemize}\vspace{-11pt}
+
+%-----------PROJECTS-----------
+\section{Relevant Projects}
+    \resumeSubHeadingListStart
+      \resumeProjectHeading{\textbf{VCII-Based Simulated Grounded Inductor} $|$ \emph{Cadence Virtuoso, 0.18 $\mu$m CMOS}}{2025}
+          \resumeItemListStart
+            \resumeItem{Designed custom analog layout of a 12-transistor VCII circuit in Cadence Virtuoso; completed DRC/LVS and PEX for schematic-to-layout correlation.}
+            \resumeItem{Validated 2.5 mH equivalent inductance, 50 kHz--2.5 MHz bandwidth, and 0.65 mW power for active-filter application.}
+            \resumeItem{Analyzed transistor sizing, parasitic loading, bandwidth, and power tradeoffs in CMOS analog implementation.}
+          \resumeItemListEnd
+      \resumeProjectHeading{\textbf{Two-Stage CMOS Operational Amplifier} $|$ \emph{Independent Analog Design Exercise, 180 nm CMOS}}{2026}
+          \resumeItemListStart
+            \resumeItem{Prepared Miller-compensated CMOS op-amp topology using differential input pair, current-mirror load, common-source gain stage, bias branch, and compensation capacitor.}
+            \resumeItem{Defined DC/AC/transient verification plan for operating point, gain, phase margin, GBW, slew rate, output swing, power, CMRR, PSRR, and load stability.}
+            \resumeItem{Mapped layout practices for matching/parasitic control: symmetric pair, common-centroid mirrors, dummy devices, guard rings, and short high-impedance routing.}
+          \resumeItemListEnd
+      \resumeProjectHeading{\textbf{CMOS-Based Grounded Capacitance Multiplier using PFTFN} $|$ \emph{OrCAD PSpice, 0.35 $\mu$m CMOS}}{2025}
+          \resumeItemListStart
+            \resumeItem{Designed 14-transistor cascode OTA-based capacitance multiplier achieving 1.503 nF equivalent capacitance with 0.2\% accuracy.}
+          \resumeItemListEnd
+      \resumeProjectHeading{\textbf{Single-OTRA Multifunctional Biquad Filter} $|$ \emph{M.Tech Thesis, Cadence/ngspice, 180nm CMOS}}{2025--2026}
+          \resumeItemListStart
+            \resumeItem{Verified biquad at behavioral, transistor, and layout-extracted levels; built ngspice+Pytest automated testbench for bias sweep and corner analysis.}
+            \resumeItem{Identified HPF passband droop root cause via systematic $V_{B1}$ sweep; resolved to $<$1dB. All 3 responses validated against published targets.}
+          \resumeItemListEnd
+      \resumeProjectHeading{\textbf{AnalogCheck -- RAG-Enhanced SPICE Netlist Debugger} $|$ \emph{Python, ChromaDB, LLM, ngspice}}{2026}
+          \resumeItemListStart
+            \resumeItem{Built CLI tool detecting semantic errors in SPICE netlists via token-split parsing, deterministic checks (floating node, missing ground, M vs MEG), and LLM reasoning.}
+            \resumeItem{Implemented RAG pipeline indexing 20+ IC error patterns (LM741, LM358, LM317 pinout) and PSpice convergence docs into ChromaDB with sentence-transformer embeddings.}
+            \resumeItem{RAG context at check-time grounds LLM diagnosis in verified reference docs. 35 chunks, ~35ms retrieval, integrated into CLI with --rag flag.}
+          \resumeItemListEnd
+    \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+    \resumeSubheading{Teaching Assistant, Department of Electrical Engineering}{Aug 2024 -- Present}{Delhi Technological University}{New Delhi}
+      \resumeItemListStart
+        \resumeItem{Supported academic/laboratory activities while strengthening fundamentals in circuit analysis, control, instrumentation, and simulation.}
+      \resumeItemListEnd
+  \resumeSubHeadingListEnd
+
+%-----------ACHIEVEMENTS-----------
+\section{Achievements}
+ \begin{itemize}[leftmargin=0.17in, itemsep=2pt]
+    \item \footnotesize{Qualified GATE 2024 in Electrical Engineering.}
+    \item \footnotesize{Published IEEE conference paper: ``Application \& Performance Comparison of Electrical Motors in Hybrid Electric Vehicles.''}
+ \end{itemize}
+
+\end{document}
